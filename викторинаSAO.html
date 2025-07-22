@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Викторина: Какой ты персонаж из SAO?</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0c1445, #1a237e, #283593);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(66, 165, 245, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(244, 67, 54, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(76, 175, 80, 0.1) 0%, transparent 30%);
+            z-index: -1;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(66, 165, 245, 0.3);
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(90deg, #1a237e, #283593);
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            border-bottom: 2px solid #42a5f5;
+        }
+
+        .header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px rgba(66, 165, 245, 0.7);
+            margin-bottom: 10px;
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(66, 165, 245, 0.7);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(66, 165, 245, 1), 0 0 30px rgba(66, 165, 245, 0.8);
+            }
+        }
+
+        .header p {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .screen {
+            padding: 25px;
+            display: none;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .active {
+            display: block;
+        }
+
+        .welcome-screen {
+            text-align: center;
+        }
+
+        .welcome-screen img {
+            width: 200px;
+            margin: 20px auto;
+            filter: drop-shadow(0 0 10px rgba(66, 165, 245, 0.5));
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .btn {
+            background: linear-gradient(90deg, #42a5f5, #2979ff);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            margin: 20px 0;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(41, 121, 255, 0.4);
+            display: inline-block;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(41, 121, 255, 0.6);
+        }
+
+        .question-container {
+            margin-bottom: 25px;
+        }
+
+        .question-number {
+            font-size: 0.9rem;
+            opacity: 0.7;
+            margin-bottom: 5px;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            font-weight: 500;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 12px;
+        }
+
+        .option {
+            background: rgba(30, 40, 70, 0.7);
+            border: 1px solid rgba(66, 165, 245, 0.3);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option:hover {
+            background: rgba(66, 165, 245, 0.2);
+            transform: translateX(5px);
+        }
+
+        .option.selected {
+            background: rgba(66, 165, 245, 0.4);
+            border-color: #42a5f5;
+        }
+
+        .progress-container {
+            margin: 25px 0;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: rgba(30, 40, 70, 0.7);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #42a5f5, #2979ff);
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .result-container {
+            text-align: center;
+        }
+
+        .character-image {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 20px auto;
+            border: 4px solid #42a5f5;
+            box-shadow: 0 0 20px rgba(66, 165, 245, 0.7);
+            object-fit: cover;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 15px rgba(66, 165, 245, 0.7); }
+            50% { box-shadow: 0 0 30px rgba(66, 165, 245, 0.9), 0 0 40px rgba(66, 165, 245, 0.5); }
+            100% { box-shadow: 0 0 15px rgba(66, 165, 245, 0.7); }
+        }
+
+        .character-name {
+            font-size: 2rem;
+            font-family: 'Orbitron', sans-serif;
+            margin: 15px 0;
+            color: #42a5f5;
+            text-shadow: 0 0 10px rgba(66, 165, 245, 0.7);
+        }
+
+        .character-description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            background: rgba(30, 40, 70, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .traits-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .trait {
+            background: rgba(30, 40, 70, 0.7);
+            border-radius: 10px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .trait-name {
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            color: #bb86fc;
+        }
+
+        .trait-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #42a5f5;
+        }
+
+        .trait-bar {
+            height: 10px;
+            background: rgba(30, 40, 70, 0.9);
+            border-radius: 5px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .trait-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #42a5f5, #2979ff);
+            border-radius: 5px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+            border-top: 1px solid rgba(66, 165, 245, 0.3);
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+            }
+            
+            .character-name {
+                font-size: 1.8rem;
+            }
+            
+            .trait {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Какой ты персонаж из SAO?</h1>
+            <p>Пройди тест и узнай, кто ты в мире Меча Онлайн</p>
+        </div>
+        
+        <div id="welcome-screen" class="screen active">
+            <div class="welcome-screen">
+                <img src="https://m.media-amazon.com/images/M/MV5BN2NhYzU2NDEtYzI1NS00MjgzLThjZGUtOTYxNGJkZjZmNDdjXkEyXkFqcGc@._V1_.jpg" alt="Sword Art Online">
+                <h2>Добро пожаловать в викторину!</h2>
+                <p>Ответь на 10 вопросов и узнай, какого персонажа из аниме "Мастер меча онлайн" ты напоминаешь. Мы определим твои черты характера и уровень различных качеств.</p>
+                <button id="start-btn" class="btn">Начать викторину <i class="fas fa-chevron-right"></i></button>
+            </div>
+        </div>
+        
+        <div id="quiz-screen" class="screen">
+            <div class="question-container">
+                <div class="question-number">Вопрос <span id="current-question">1</span> из 10</div>
+                <div class="question-text" id="question-text">Загрузка вопроса...</div>
+            </div>
+            
+            <div class="options-container" id="options-container">
+                <!-- Варианты ответов будут добавлены через JS -->
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-text">
+                    <span>Прогресс</span>
+                    <span id="progress-percent">0%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill"></div>
+                </div>
+            </div>
+            
+            <button id="next-btn" class="btn" disabled>Следующий вопрос <i class="fas fa-arrow-right"></i></button>
+        </div>
+        
+        <div id="result-screen" class="screen">
+            <div class="result-container">
+                <img id="character-image" class="character-image" src="" alt="Персонаж">
+                <div class="character-name" id="character-name">Твой персонаж</div>
+                <div class="character-description" id="character-description">Описание персонажа</div>
+                
+                <h3>Твои характеристики:</h3>
+                <div class="traits-container">
+                    <div class="trait">
+                        <div class="trait-name">Ярость</div>
+                        <div class="trait-value" id="rage-value">0%</div>
+                        <div class="trait-bar">
+                            <div class="trait-fill" id="rage-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="trait">
+                        <div class="trait-name">Доброта</div>
+                        <div class="trait-value" id="kindness-value">0%</div>
+                        <div class="trait-bar">
+                            <div class="trait-fill" id="kindness-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="trait">
+                        <div class="trait-name">Храбрость</div>
+                        <div class="trait-value" id="courage-value">0%</div>
+                        <div class="trait-bar">
+                            <div class="trait-fill" id="courage-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div class="trait">
+                        <div class="trait-name">Интеллект</div>
+                        <div class="trait-value" id="intelligence-value">0%</div>
+                        <div class="trait-bar">
+                            <div class="trait-fill" id="intelligence-bar" style="width: 0%"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <button id="restart-btn" class="btn">Пройти снова <i class="fas fa-redo"></i></button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Викторина по аниме "Мастер меча онлайн" | Создано с ❤️ для фанатов SAO
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Элементы DOM
+            const welcomeScreen = document.getElementById('welcome-screen');
+            const quizScreen = document.getElementById('quiz-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const startBtn = document.getElementById('start-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const restartBtn = document.getElementById('restart-btn');
+            const questionText = document.getElementById('question-text');
+            const optionsContainer = document.getElementById('options-container');
+            const currentQuestionEl = document.getElementById('current-question');
+            const progressFill = document.getElementById('progress-fill');
+            const progressPercent = document.getElementById('progress-percent');
+            
+            // Элементы результатов
+            const characterImage = document.getElementById('character-image');
+            const characterName = document.getElementById('character-name');
+            const characterDescription = document.getElementById('character-description');
+            const rageValue = document.getElementById('rage-value');
+            const kindnessValue = document.getElementById('kindness-value');
+            const courageValue = document.getElementById('courage-value');
+            const intelligenceValue = document.getElementById('intelligence-value');
+            const rageBar = document.getElementById('rage-bar');
+            const kindnessBar = document.getElementById('kindness-bar');
+            const courageBar = document.getElementById('courage-bar');
+            const intelligenceBar = document.getElementById('intelligence-bar');
+            
+            // Данные викторины
+            let currentQuestion = 0;
+            let userTraits = {
+                rage: 0,
+                kindness: 0,
+                courage: 0,
+                intelligence: 0
+            };
+            
+            const questions = [
+                {
+                    question: "Как бы ты поступил, если бы увидел, как обижают слабого игрока?",
+                    options: [
+                        { text: "Немедленно вмешаюсь и защищу", traits: { courage: 3, kindness: 2 } },
+                        { text: "Попробую найти более сильных игроков для помощи", traits: { intelligence: 3, kindness: 1 } },
+                        { text: "Накажу обидчиков так, чтобы неповадно было", traits: { rage: 3, courage: 2 } },
+                        { text: "Это не мои проблемы, пройду мимо", traits: { intelligence: 1 } }
+                    ]
+                },
+                {
+                    question: "Какую роль ты предпочитаешь в команде?",
+                    options: [
+                        { text: "Лидер - веду за собой и принимаю решения", traits: { courage: 3, intelligence: 2 } },
+                        { text: "Защитник - прикрою товарищей в бою", traits: { courage: 3, kindness: 1 } },
+                        { text: "Стратег - разрабатываю план действий", traits: { intelligence: 3 } },
+                        { text: "Одиночка - работаю лучше один", traits: { rage: 2, courage: 1 } }
+                    ]
+                },
+                {
+                    question: "Что для тебя важнее всего в игре?",
+                    options: [
+                        { text: "Стать самым сильным игроком", traits: { rage: 3, courage: 2 } },
+                        { text: "Помогать другим игрокам", traits: { kindness: 3 } },
+                        { text: "Исследовать мир и находить секреты", traits: { intelligence: 3, courage: 1 } },
+                        { text: "Найти верных друзей и создать гильдию", traits: { kindness: 2, courage: 2 } }
+                    ]
+                },
+                {
+                    question: "Как ты относишься к риску?",
+                    options: [
+                        { text: "Иду на риск без колебаний - это весело!", traits: { courage: 3 } },
+                        { text: "Рассчитываю риски, прежде чем действовать", traits: { intelligence: 3 } },
+                        { text: "Рискую только ради близких людей", traits: { kindness: 2, courage: 2 } },
+                        { text: "Избегаю рисков - безопасность превыше всего", traits: { intelligence: 2 } }
+                    ]
+                },
+                {
+                    question: "Что вызывает у тебя наибольший гнев?",
+                    options: [
+                        { text: "Предательство и ложь", traits: { rage: 3 } },
+                        { text: "Несправедливость и жестокость", traits: { rage: 2, kindness: 2 } },
+                        { text: "Глупость и безрассудство", traits: { intelligence: 2, rage: 1 } },
+                        { text: "Меня сложно вывести из себя", traits: { kindness: 2, intelligence: 1 } }
+                    ]
+                },
+                {
+                    question: "Как ты действуешь в трудной ситуации?",
+                    options: [
+                        { text: "Атакую первым - лучшая защита это нападение", traits: { rage: 3, courage: 2 } },
+                        { text: "Анализирую ситуацию и ищу оптимальное решение", traits: { intelligence: 3 } },
+                        { text: "Ищу помощи у друзей", traits: { kindness: 2 } },
+                        { text: "Защищаюсь и жду подходящего момента", traits: { courage: 2, intelligence: 1 } }
+                    ]
+                },
+                {
+                    question: "Что для тебя значит дружба?",
+                    options: [
+                        { text: "Готов умереть за друзей", traits: { courage: 3, kindness: 2 } },
+                        { text: "Друзья - это поддержка и взаимовыручка", traits: { kindness: 3 } },
+                        { text: "Ценю дружбу, но предпочитаю действовать один", traits: { courage: 1 } },
+                        { text: "Не особенно нуждаюсь в друзьях", traits: { rage: 1, intelligence: 1 } }
+                    ]
+                },
+                {
+                    question: "Как ты воспринимаешь смертельную игру?",
+                    options: [
+                        { text: "Как вызов, который сделает меня сильнее", traits: { courage: 3, rage: 1 } },
+                        { text: "Как трагедию, которую нужно преодолеть вместе", traits: { kindness: 3 } },
+                        { text: "Как возможность проявить свои навыки", traits: { intelligence: 2, courage: 2 } },
+                        { text: "Как кошмар, из которого нужно выбраться", traits: { intelligence: 2 } }
+                    ]
+                },
+                {
+                    question: "Как ты относишься к своим противникам?",
+                    options: [
+                        { text: "Уничтожаю без жалости", traits: { rage: 3 } },
+                        { text: "Даю шанс сдаться", traits: { kindness: 2, courage: 1 } },
+                        { text: "Изучаю их слабые стороны", traits: { intelligence: 3 } },
+                        { text: "Избегаю ненужных конфликтов", traits: { intelligence: 2, kindness: 1 } }
+                    ]
+                },
+                {
+                    question: "Что ты сделаешь после освобождения из игры?",
+                    options: [
+                        { text: "Найду виновных и привлеку к ответственности", traits: { rage: 3, courage: 2 } },
+                        { text: "Вернусь к обычной жизни с близкими", traits: { kindness: 3 } },
+                        { text: "Использую полученные навыки в реальном мире", traits: { intelligence: 3, courage: 1 } },
+                        { text: "Продолжу играть в другие VR-игры", traits: { courage: 2 } }
+                    ]
+                }
+            ];
+            
+            const characters = [
+                {
+                    name: "Кирито",
+                    image: "https://pm1.aminoapps.com/6650/fe91259101acc3fa51458a68dee51a8ae09021b2_00.jpg",
+                    description: "Ты - одиночка с сильным чувством справедливости. Как Кирито, ты готов рисковать ради других и защищать слабых. Твои боевые навыки невероятны, но при этом ты сохраняешь доброе сердце.",
+                    traits: { rage: 30, kindness: 70, courage: 90, intelligence: 80 }
+                },
+                {
+                    name: "Асуна",
+                    image: "https://pm1.aminoapps.com/6526/fb3aca46b25a5c61a4f03a2b826e1498b95fbb1f_hq.jpg",
+                    description: "Ты сильная и добрая, как Асуна. Твоя преданность близким безгранична, а боевые навыки делают тебя грозным противником. Ты сочетаешь в себе нежность и невероятную силу духа.",
+                    traits: { rage: 20, kindness: 90, courage: 85, intelligence: 75 }
+                },
+                {
+                    name: "Клинг",
+                    image: "https://p4.wallpaperbetter.com/wallpaper/355/138/521/sword-art-online-klein-sword-art-online-ryoutarou-tsuboi-wallpaper-preview.jpg",
+                    description: "Ты - прирожденный лидер, как Клинг. Твоя харизма и смелость вдохновляют других. Ты готов нести ответственность за свою гильдию и вести людей за собой, даже в самые опасные битвы.",
+                    traits: { rage: 50, kindness: 60, courage: 95, intelligence: 70 }
+                },
+                {
+                    name: "Синон",
+                    image: "https://pm1.aminoapps.com/6600/b5711ba2e5ec902a163644661fa9518d5a8cf3d9_hq.jpg",
+                    description: "Ты спокойный и расчетливый снайпер, как Синон. Твоя точность и хладнокровие в бою не знают равных. За внешней отстраненностью скрывается преданное сердце, готовое защищать друзей.",
+                    traits: { rage: 40, kindness: 65, courage: 75, intelligence: 85 }
+                },
+                {
+                    name: "Юдзио",
+                    image: "https://static.wikia.nocookie.net/sword-art-online/images/4/44/Eugeo.jpg",
+                    description: "Ты добряк с огромной силой, как Юдзио. Твоя доброта и преданность друзьям не знают границ. В бою ты непобедимый танк, готовый принять любой удар на себя ради защиты товарищей.",
+                    traits: { rage: 25, kindness: 95, courage: 85, intelligence: 60 }
+                },
+                {
+                    name: "Лифа",
+                    image: "https://pm1.aminoapps.com/6711/e13c13f3befdf4b412028c3cfd59c659d0b1a6dd_hq.jpg",
+                    description: "Ты целеустремленная и умная, как Лифа. Твои знания и аналитические способности помогают находить решения в самых сложных ситуациях. Ты готова пойти на риск ради достижения цели.",
+                    traits: { rage: 30, kindness: 70, courage: 80, intelligence: 90 }
+                }
+            ];
+            
+            // Инициализация викторины
+            startBtn.addEventListener('click', startQuiz);
+            nextBtn.addEventListener('click', nextQuestion);
+            restartBtn.addEventListener('click', restartQuiz);
+            
+            function startQuiz() {
+                welcomeScreen.classList.remove('active');
+                quizScreen.classList.add('active');
+                showQuestion();
+            }
+            
+            function showQuestion() {
+                const question = questions[currentQuestion];
+                questionText.textContent = question.question;
+                optionsContainer.innerHTML = '';
+                
+                currentQuestionEl.textContent = currentQuestion + 1;
+                const progress = ((currentQuestion) / questions.length) * 100;
+                progressFill.style.width = `${progress}%`;
+                progressPercent.textContent = `${Math.round(progress)}%`;
+                
+                question.options.forEach((option, index) => {
+                    const optionElement = document.createElement('div');
+                    optionElement.classList.add('option');
+                    optionElement.innerHTML = `
+                        <span>${index + 1}.</span> ${option.text}
+                    `;
+                    
+                    optionElement.addEventListener('click', () => {
+                        document.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+                        optionElement.classList.add('selected');
+                        nextBtn.disabled = false;
+                        
+                        // Сохраняем выбранные черты
+                        for (const trait in option.traits) {
+                            userTraits[trait] += option.traits[trait];
+                        }
+                    });
+                    
+                    optionsContainer.appendChild(optionElement);
+                });
+            }
+            
+            function nextQuestion() {
+                currentQuestion++;
+                
+                if (currentQuestion < questions.length) {
+                    showQuestion();
+                    nextBtn.disabled = true;
+                } else {
+                    showResult();
+                }
+            }
+            
+            function showResult() {
+                quizScreen.classList.remove('active');
+                resultScreen.classList.add('active');
+                
+                // Нормализуем значения характеристик
+                const maxTraitValue = Math.max(...Object.values(userTraits));
+                const scaleFactor = 100 / maxTraitValue;
+                
+                const normalizedTraits = {};
+                for (const trait in userTraits) {
+                    normalizedTraits[trait] = Math.min(100, Math.round(userTraits[trait] * scaleFactor));
+                }
+                
+                // Определяем персонажа
+                let closestCharacter = characters[0];
+                let minDifference = Infinity;
+                
+                characters.forEach(character => {
+                    let difference = 0;
+                    for (const trait in normalizedTraits) {
+                        difference += Math.abs(normalizedTraits[trait] - character.traits[trait]);
+                    }
+                    
+                    if (difference < minDifference) {
+                        minDifference = difference;
+                        closestCharacter = character;
+                    }
+                });
+                
+                // Показываем результат
+                characterImage.src = closestCharacter.image;
+                characterImage.alt = closestCharacter.name;
+                characterName.textContent = closestCharacter.name;
+                characterDescription.textContent = closestCharacter.description;
+                
+                // Анимируем показ характеристик
+                animateTrait('rage', normalizedTraits.rage, closestCharacter.traits.rage);
+                animateTrait('kindness', normalizedTraits.kindness, closestCharacter.traits.kindness);
+                animateTrait('courage', normalizedTraits.courage, closestCharacter.traits.courage);
+                animateTrait('intelligence', normalizedTraits.intelligence, closestCharacter.traits.intelligence);
+            }
+            
+            function animateTrait(trait, userValue, characterValue) {
+                const valueElement = document.getElementById(`${trait}-value`);
+                const barElement = document.getElementById(`${trait}-bar`);
+                
+                let current = 0;
+                const increment = userValue / 50;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= userValue) {
+                        current = userValue;
+                        clearInterval(timer);
+                        valueElement.textContent = `${userValue}%`;
+                    } else {
+                        valueElement.textContent = `${Math.round(current)}%`;
+                    }
+                    
+                    barElement.style.width = `${current}%`;
+                    
+                    // Изменение цвета в зависимости от значения
+                    if (current < 30) {
+                        barElement.style.background = 'linear-gradient(90deg, #f44336, #d32f2f)';
+                    } else if (current < 70) {
+                        barElement.style.background = 'linear-gradient(90deg, #ff9800, #f57c00)';
+                    } else {
+                        barElement.style.background = 'linear-gradient(90deg, #4caf50, #2e7d32)';
+                    }
+                }, 20);
+            }
+            
+            function restartQuiz() {
+                resultScreen.classList.remove('active');
+                welcomeScreen.classList.add('active');
+                currentQuestion = 0;
+                userTraits = { rage: 0, kindness: 0, courage: 0, intelligence: 0 };
+            }
+        });
+    </script>
+</body>
+</html>
